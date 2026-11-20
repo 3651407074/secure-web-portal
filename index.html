@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>secure-web 入口</title>
+<style>
+body{margin:0;background:#0f1216;color:#e6edf3;font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center}
+.box{max-width:420px;padding:28px;border:1px solid #263041;border-radius:10px;background:#161b22;text-align:center}
+h1{margin:0 0 10px;font-size:22px;color:#4cc38a}
+p{color:#8b98a9;margin:8px 0}
+a{color:#4cc38a}
+code{color:#8b98a9;font-size:12px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>secure-web</h1>
+  <p id="msg">正在跳转到当前站点…</p>
+  <p><a id="link" href="#">如果没自动跳转，点这里</a></p>
+  <p><code id="raw"></code></p>
+</div>
+<script>
+fetch('target.txt?t=' + Date.now(), {cache:'no-store'})
+  .then(function(r){ return r.text(); })
+  .then(function(t){
+    var u = t.trim();
+    if (!u) throw new Error('empty');
+    document.getElementById('link').href = u;
+    document.getElementById('raw').textContent = u;
+    document.getElementById('msg').textContent = '跳转中…';
+    setTimeout(function(){ location.replace(u); }, 400);
+  })
+  .catch(function(){
+    document.getElementById('msg').textContent = '入口未就绪，请稍后刷新。';
+  });
+</script>
+</body>
+</html>
